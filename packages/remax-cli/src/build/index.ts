@@ -1,4 +1,5 @@
 import { Options } from '@remax/types';
+import devtools from '@remax/plugin-devtools';
 import output from './utils/output';
 import remaxVersion from '../remaxVersion';
 import { Platform } from '@remax/types';
@@ -15,7 +16,7 @@ interface Argv {
 
 export function run(options: Options): webpack.Compiler {
   const api = new API();
-  api.registerPlugins(options);
+  api.registerPlugins([devtools(), ...options.plugins]);
 
   if (options.turboPages && options.turboPages.length > 0 && options.target !== Platform.ali) {
     throw new Error('turboPages 目前仅支持 ali 平台开启');
