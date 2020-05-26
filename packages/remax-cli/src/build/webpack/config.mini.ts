@@ -195,11 +195,6 @@ export default function webpackConfig(api: API, options: Options, target: Platfo
   config.plugin('remax-native-files-plugin').use(RemaxPlugins.NativeFiles, [api, options]);
   config.plugin('remax-define-plugin').use(RemaxPlugins.Define, [options]);
   config.plugin('remax-coverage-ignore-plugin').use(RemaxPlugins.CoverageIgnore);
-  config.plugin('define-plugin').use(webpack.DefinePlugin, [
-    {
-      __REACT_DEVTOOLS_GLOBAL_HOOK__: 'my.__REACT_DEVTOOLS_GLOBAL_HOOK__',
-    },
-  ]);
 
   const context = {
     config,
