@@ -1,13 +1,21 @@
 import * as t from '@babel/types';
-import { NodePath } from '@babel/traverse';
+import { NodePath, Node } from '@babel/traverse';
 import { addNamed } from '@babel/helper-module-imports';
 import winPath from '../../winPath';
 
 function appConfigExpression(path: NodePath<t.ExportDefaultDeclaration>, id: t.Identifier) {
   const createId = addNamed(path, 'createAppConfig', '@remax/runtime');
-  path.insertAfter(
-    t.exportDefaultDeclaration(t.callExpression(t.identifier('App'), [t.callExpression(createId, [id])]))
-  );
+  const insert: Node[] = [
+    t.exportDefaultDeclaration(t.callExpression(t.identifier('App'), [t.callExpression(createId, [id])])),
+  ];
+  if (process.env.NODE_ENV === 'development') {
+    insert.unshift(
+      t.expressionStatement(
+        t.assignmentExpression('=', t.memberExpression(id, t.identifier('displayName')), t.stringLiteral('App'))
+      )
+    );
+  }
+  path.insertAfter(insert);
 }
 
 export default (entry: string) => {
